@@ -23,7 +23,7 @@ from mmseg.utils import (collect_env, get_device, get_root_logger,
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a segmentor')
-    parser.add_argument('config', help='train config file path')
+    parser.add_argument('--config', help='train config file path')
     parser.add_argument('--work-dir', help='the dir to save logs and models')
     parser.add_argument(
         '--load-from', help='the checkpoint file to load weights from')
@@ -108,8 +108,7 @@ def parse_args():
     return args
 
 
-def main():
-    args = parse_args()
+def main(args):
 
     cfg = Config.fromfile(args.config)
     if args.cfg_options is not None:
@@ -239,4 +238,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    args = parse_args()
+    main(args)
