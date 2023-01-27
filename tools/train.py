@@ -108,8 +108,7 @@ def parse_args():
     return args
 
 
-def main():
-    args = parse_args()
+def main(args):
 
     cfg = Config.fromfile(args.config)
     if args.cfg_options is not None:
@@ -239,4 +238,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    args = parse_args()
+    main(args)
