@@ -20,6 +20,19 @@ from mmseg.models import build_segmentor
 from mmseg.utils import (collect_env, get_device, get_root_logger,
                          setup_multi_processes)
 
+def bool_flag(s):
+    """
+    Parse boolean arguments from the command line.
+    """
+    FALSY_STRINGS = {"off", "false", "0"}
+    TRUTHY_STRINGS = {"on", "true", "1"}
+    if s.lower() in FALSY_STRINGS:
+        return False
+    elif s.lower() in TRUTHY_STRINGS:
+        return True
+    else:
+        raise argparse.ArgumentTypeError("invalid value for a boolean flag")
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a segmentor')
@@ -31,7 +44,8 @@ def parse_args():
         '--resume-from', help='the checkpoint file to resume from')
     parser.add_argument(
         '--no-validate',
-        action='store_true',
+        default=False,
+        type=bool_flag,
         help='whether not to evaluate the checkpoint during training')
     group_gpus = parser.add_mutually_exclusive_group()
     group_gpus.add_argument(
@@ -54,11 +68,13 @@ def parse_args():
     parser.add_argument('--seed', type=int, default=None, help='random seed')
     parser.add_argument(
         '--diff_seed',
-        action='store_true',
+        default=False,
+        type=bool_flag,
         help='Whether or not set different seeds for different ranks')
     parser.add_argument(
         '--deterministic',
-        action='store_true',
+        default=False,
+        type=bool_flag,
         help='whether to set deterministic options for CUDNN backend.')
     parser.add_argument(
         '--options',
