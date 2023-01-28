@@ -114,7 +114,8 @@ def main(**kwargs):
     args.config = kwargs['config']
     args.work_dir = kwargs['work_dir']
     args.load_from = kwargs['load_from']
-    args.launcher = kwargs['launcher'] if 'launcher' in kwargs.keys() else 'none'
+    # args.launcher = kwargs['launcher'] if 'launcher' in kwargs.keys() else 'none'
+    args.launcher = 'none'
 
     cfg = Config.fromfile(args.config)
     if args.cfg_options is not None:
