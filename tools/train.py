@@ -81,11 +81,11 @@ def parse_args():
         'It also allows nested list/tuple values, e.g. key="[(a,b),(c,d)]" '
         'Note that the quotation marks are necessary and that no white space '
         'is allowed.')
-    parser.add_argument(
-        '--launcher',
-        choices=['none', 'pytorch', 'slurm', 'mpi'],
-        default='none',
-        help='job launcher')
+    # parser.add_argument(
+    #     '--launcher',
+    #     choices=['none', 'pytorch', 'slurm', 'mpi'],
+    #     default='none',
+    #     help='job launcher')
     parser.add_argument('--local_rank', type=int, default=0)
     parser.add_argument(
         '--auto-resume',
@@ -113,6 +113,7 @@ def main(**kwargs):
     args.config = kwargs['config']
     args.work_dir = kwargs['work_dir']
     args.load_from = kwargs['load_from']
+    args.launcher = kwargs['launcher'] if 'launcher' in kwargs.keys() else None
 
     cfg = Config.fromfile(args.config)
     if args.cfg_options is not None:
