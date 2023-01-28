@@ -91,7 +91,8 @@ def parse_args():
         '--auto-resume',
         action='store_true',
         help='resume from the latest checkpoint automatically.')
-    args = parser.parse_args()
+    # args = parser.parse_args()
+    args, unknown = parser.parse_known_args()
     if 'LOCAL_RANK' not in os.environ:
         os.environ['LOCAL_RANK'] = str(args.local_rank)
 
@@ -113,7 +114,7 @@ def main(**kwargs):
     args.config = kwargs['config']
     args.work_dir = kwargs['work_dir']
     args.load_from = kwargs['load_from']
-    args.launcher = kwargs['launcher'] if 'launcher' in kwargs.keys() else None
+    args.launcher = kwargs['launcher'] if 'launcher' in kwargs.keys() else 'none'
 
     cfg = Config.fromfile(args.config)
     if args.cfg_options is not None:
