@@ -110,6 +110,8 @@ def parse_args():
 
 def main(args):
 
+    print(args.config)
+    print(os.path.exists(args.config))
     cfg = Config.fromfile(args.config)
     if args.cfg_options is not None:
         cfg.merge_from_dict(args.cfg_options)
