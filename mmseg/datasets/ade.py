@@ -83,12 +83,32 @@ class ADE20KDataset(CustomDataset):
                [184, 255, 0], [0, 133, 255], [255, 214, 0], [25, 194, 194],
                [102, 255, 0], [92, 0, 255]]
 
-    def __init__(self, **kwargs):
+    def __init__(self, untar_path, **kwargs):
         super(ADE20KDataset, self).__init__(
             img_suffix='.jpg',
             seg_map_suffix='.png',
             reduce_zero_label=True,
             **kwargs)
+        self.untar(untar_path)
+
+    def untar(self, untar_path):
+        if not self.data_root.endswith('.tar'):
+           return
+
+        # Untar the dataset
+        if untar_path[0] == '$':
+            untar_path = os.environ[untar_path[1:]]
+        start_copy_time = time.time()
+
+        with tarfile.open(src, 'r') as f:
+            f.extractall(untar_path)
+        print('Time taken for untar:', time.time() - start_copy_time)
+
+        # Wait
+        time.sleep(5)
+
+        # Update the data root dir
+        self.data_root = os.path.join(self.untar_path, 'ade/ADEChallengeData2016')
 
     def results2img(self, results, imgfile_prefix, to_label_id, indices=None):
         """Write the segmentation results to images.
