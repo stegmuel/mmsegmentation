@@ -95,7 +95,6 @@ class ADE20KDataset(CustomDataset):
             seg_map_suffix='.png',
             reduce_zero_label=True,
             **kwargs)
-        self.untar(untar_path)
 
     def untar(self, untar_path, data_root):
         if not data_root.endswith('.tar'):
