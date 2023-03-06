@@ -7,6 +7,9 @@ from PIL import Image
 
 from .builder import DATASETS
 from .custom import CustomDataset
+import time
+import tarfile
+import os
 
 
 @DATASETS.register_module()
@@ -84,6 +87,9 @@ class ADE20KDataset(CustomDataset):
                [102, 255, 0], [92, 0, 255]]
 
     def __init__(self, untar_path, **kwargs):
+        data_root = kwargs['data_root']
+        data_root = self.untar(untar_path, data_root)
+        kwargs['data_root'] = data_root
         super(ADE20KDataset, self).__init__(
             img_suffix='.jpg',
             seg_map_suffix='.png',
@@ -91,16 +97,16 @@ class ADE20KDataset(CustomDataset):
             **kwargs)
         self.untar(untar_path)
 
-    def untar(self, untar_path):
-        if not self.data_root.endswith('.tar'):
-           return
+    def untar(self, untar_path, data_root):
+        if not data_root.endswith('.tar'):
+           return data_root
 
         # Untar the dataset
         if untar_path[0] == '$':
             untar_path = os.environ[untar_path[1:]]
         start_copy_time = time.time()
 
-        with tarfile.open(src, 'r') as f:
+        with tarfile.open(data_root, 'r') as f:
             f.extractall(untar_path)
         print('Time taken for untar:', time.time() - start_copy_time)
 
@@ -108,7 +114,9 @@ class ADE20KDataset(CustomDataset):
         time.sleep(5)
 
         # Update the data root dir
-        self.data_root = os.path.join(self.untar_path, 'ade/ADEChallengeData2016')
+        data_root = os.path.join(untar_path, 'ade/ADEChallengeData2016')
+        return data_root
+
 
     def results2img(self, results, imgfile_prefix, to_label_id, indices=None):
         """Write the segmentation results to images.
